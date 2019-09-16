@@ -24,14 +24,14 @@ public class Graph {
         verts.get(5).addLink(verts.get(4));
     }
 
-    private final Map<NumericVertex, Set<NumericVertex>> data = new TreeMap<>();
+    protected final Map<NumericVertex, Set<NumericVertex>> data = new TreeMap<>();
 
     public Set<NumericVertex> getAllNodes() {
         return data.keySet();
     }
 
     public class NumericVertex implements Comparable<NumericVertex> {
-        private final int number;
+        protected final int number;
 
         public NumericVertex(int number) {
             this.number = number;
@@ -41,8 +41,8 @@ public class Graph {
             return Graph.this.data.get(this);
         }
 
-        public void addLink(NumericVertex toNode){
-            data.computeIfAbsent(this, k -> new TreeSet<>());
+        public void addLink(NumericVertex toNode) {
+            data.computeIfAbsent(this, vertexT -> new TreeSet<>());
             data.get(this).add(toNode);
         }
 
@@ -61,7 +61,7 @@ public class Graph {
         public class PathLengthToVertexes {
             private final Map<NumericVertex, Integer> data = new TreeMap<>();
 
-            public void put(NumericVertex numericVertex, int length){
+            public void put(NumericVertex numericVertex, int length) {
                 data.put(numericVertex, length);
             }
 
@@ -69,7 +69,7 @@ public class Graph {
                 return data.get(node);
             }
 
-            public Set<Map.Entry<NumericVertex, Integer>> getAll(){
+            public Set<Map.Entry<NumericVertex, Integer>> getAll() {
                 return data.entrySet();
             }
         }
@@ -78,7 +78,7 @@ public class Graph {
     public class PreviousVertexes {
         private final Map<NumericVertex, NumericVertex> data = new TreeMap<>();
 
-        public void put(NumericVertex current, NumericVertex previous){
+        public void put(NumericVertex current, NumericVertex previous) {
             data.put(current, previous);
         }
 
@@ -92,21 +92,21 @@ public class Graph {
      */
     public class BreadthFirstSearch {
 
-        private NumericVertex startNode;
+        private final NumericVertex startNode;
 
         private final Graph.PreviousVertexes previousVertexes;
         private final NumericVertex.PathLengthToVertexes pathLengthToVertexes;
 
-        public BreadthFirstSearch() {
-            this.startNode = Graph.this.getAllNodes().iterator().next();
+        public BreadthFirstSearch(NumericVertex startNode) {
+            this.startNode = startNode;
             previousVertexes = new PreviousVertexes();
             pathLengthToVertexes = startNode.new PathLengthToVertexes();
             init();
         }
 
-        private void init(){
+        private void init() {
             final TreeMap<NumericVertex, VertexColor> statusC = new TreeMap<>();
-            for (NumericVertex node: getAllNodes()) {
+            for (NumericVertex node : getAllNodes()) {
                 if (node != startNode) {
                     pathLengthToVertexes.put(node, Integer.MAX_VALUE);
                     statusC.put(node, VertexColor.White);
@@ -118,7 +118,7 @@ public class Graph {
             queue.add(startNode);
             while (!queue.isEmpty()) {
                 final NumericVertex node = queue.poll();
-                for(NumericVertex next: node.getNextVertexes()) {
+                for (NumericVertex next : node.getNextVertexes()) {
                     if (statusC.get(next) == VertexColor.White) {
                         pathLengthToVertexes.put(next, pathLengthToVertexes.get(node) + 1);
                         previousVertexes.put(next, node);
@@ -135,7 +135,6 @@ public class Graph {
         }
 
         /**
-         *
          * @return путь от начальной вершины до каждой
          * (соответствие вершин своим предшественникам)
          * (при наличии нескольких путей могут отличатся)
@@ -145,7 +144,6 @@ public class Graph {
         }
 
         /**
-         *
          * @return количестов переходов от начальной вершины то других
          */
         public NumericVertex.PathLengthToVertexes getPathLengthToVertexes() {
@@ -154,6 +152,46 @@ public class Graph {
 
     }
 
-    private enum VertexColor { White, Grey, Black };
+    protected enum VertexColor {White, Grey, Black}
+
+    /**
+     * Алгоритм поиска в глубину на графе
+     */
+    public class DepthFirstSearch {
+
+        private final Graph.PreviousVertexes previousVertexes;
+
+        public DepthFirstSearch() {
+            previousVertexes = new PreviousVertexes();
+            init();
+        }
+
+        private void init() {
+            final TreeMap<NumericVertex, VertexColor> statusC = new TreeMap<>();
+            for (NumericVertex node : getAllNodes()) {
+                statusC.put(node, VertexColor.White);
+            }
+            for (NumericVertex node : getAllNodes()) {
+                if (statusC.get(node) == VertexColor.White) {
+                    initRecur(node, statusC);
+                }
+            }
+        }
+
+        private void initRecur(NumericVertex node, TreeMap<NumericVertex, VertexColor> statusC) {
+            statusC.put(node, VertexColor.Grey);
+            for (NumericVertex next : node.getNextVertexes()) {
+                if (statusC.get(next) == VertexColor.White){
+                    previousVertexes.put(next, node);
+                    initRecur(next, statusC);
+                }
+            }
+            statusC.put(node, VertexColor.Black);
+        }
+
+        public PreviousVertexes getPreviousVertexes() {
+            return previousVertexes;
+        }
+    }
 
 }

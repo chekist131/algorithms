@@ -1,5 +1,11 @@
 package org.tony.sorting;
 
+/**
+ * O(n) ~ O(n^2)
+ * Устойчивая
+ * Сортировка раздвигает место для каждого элемента в массив,
+ * если это необходимо
+ */
 public class InsertionSorting extends Sorting {
 
     @Override

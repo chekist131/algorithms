@@ -5,6 +5,7 @@ import org.tony.collection.set.MyHashSet;
 import org.tony.collection.set.MySet;
 import org.tony.collection.set.MyTreeSet;
 import org.tony.graph.Graph;
+import org.tony.graph.WeightedGraph;
 import org.tony.sorting.*;
 
 import java.util.*;
@@ -12,20 +13,51 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-
+        weightedGraph();
     }
 
-    static void breadthFirstSearchGraph(){
+    static void weightedGraph(){
+        WeightedGraph weightedGraph = new WeightedGraph();
+        final List<WeightedGraph.NumericVertex> verts = new ArrayList<>(6);
+        for (int i = 0; i < 6; i++)
+            verts.add(i, weightedGraph.new NumericVertex(i));
+        verts.get(0).addLink(verts.get(1), 5);
+        verts.get(0).addLink(verts.get(3), 3);
+        verts.get(1).addLink(verts.get(5), 1);
+        verts.get(2).addLink(verts.get(5), 4);
+        verts.get(3).addLink(verts.get(1), 4);
+        verts.get(3).addLink(verts.get(2), 22);
+        verts.get(4).addLink(verts.get(3), 2);
+        verts.get(4).addLink(verts.get(5), 6);
+        verts.get(5).addLink(verts.get(3), 3);
+        verts.get(5).addLink(verts.get(4), 9);
+        System.out.println(verts.get(0));
+        System.out.println(verts.get(0).getWeight(verts.get(1)));
+        System.out.println(verts.get(0).getNextVertexesWithWeights());
+    }
+
+    static void depthFirstSearch() {
         Graph graph = new Graph();
         graph.initSample();
-        Graph.BreadthFirstSearch breadthFirstSearch = graph.new BreadthFirstSearch();
+        Graph.DepthFirstSearch depthFirstSearch = graph.new DepthFirstSearch();
+        for (Map.Entry<Graph.NumericVertex, Graph.NumericVertex> x :
+                depthFirstSearch.getPreviousVertexes().getAll())
+            System.out.println(x + " ");
+        System.out.println();
+    }
+
+    static void breadthFirstSearch() {
+        Graph graph = new Graph();
+        graph.initSample();
+        Graph.NumericVertex startNode = graph.getAllNodes().iterator().next();
+        Graph.BreadthFirstSearch breadthFirstSearch = graph.new BreadthFirstSearch(startNode);
         System.out.println("Staring node: " + breadthFirstSearch.getStartNode());
         System.out.println();
-        for(Map.Entry<Graph.NumericVertex, Integer> x:
+        for (Map.Entry<Graph.NumericVertex, Integer> x :
                 breadthFirstSearch.getPathLengthToVertexes().getAll())
             System.out.println(x + " ");
         System.out.println();
-        for(Map.Entry<Graph.NumericVertex, Graph.NumericVertex> x:
+        for (Map.Entry<Graph.NumericVertex, Graph.NumericVertex> x :
                 breadthFirstSearch.getPreviousVertexes().getAll())
             System.out.println(x + " ");
         System.out.println();

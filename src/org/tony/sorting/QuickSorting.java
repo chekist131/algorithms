@@ -1,5 +1,10 @@
 package org.tony.sorting;
 
+/**
+ * O(nlogn) ~ O(n^2)
+ * Сортировка Хоара
+ * Неустойчивая
+ */
 public class QuickSorting extends Sorting {
 
     private static void quickSorting(

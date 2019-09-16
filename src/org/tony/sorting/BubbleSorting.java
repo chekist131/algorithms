@@ -1,5 +1,9 @@
 package org.tony.sorting;
 
+/**
+ * O(n) ~ O(n^2)
+ * Устойчивая
+ */
 public class BubbleSorting extends Sorting {
 
     @Override

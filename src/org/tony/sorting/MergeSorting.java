@@ -1,5 +1,9 @@
 package org.tony.sorting;
 
+/**
+ * O(nlogn)
+ * O(n) памяти
+ */
 public class MergeSorting extends Sorting {
 
     private static void mergeSorting(final Integer[] array) {

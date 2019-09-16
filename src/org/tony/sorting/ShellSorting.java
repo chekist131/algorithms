@@ -1,5 +1,10 @@
 package org.tony.sorting;
 
+/**
+ * ... ~ O(n^2)
+ * Улучшение сортировки вставками (Insertion sort)
+ * Неустойчивая
+ */
 public class ShellSorting extends Sorting {
 
     @Override
