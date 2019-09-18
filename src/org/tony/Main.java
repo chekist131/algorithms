@@ -4,8 +4,10 @@ import org.tony.collection.list.*;
 import org.tony.collection.set.MyHashSet;
 import org.tony.collection.set.MySet;
 import org.tony.collection.set.MyTreeSet;
-import org.tony.graph.Graph;
-import org.tony.graph.WeightedGraph;
+import org.tony.graph.*;
+import org.tony.graph.algorithm.BreadthFirstSearch;
+import org.tony.graph.algorithm.DepthFirstSearch;
+import org.tony.graph.vertex.NumericVertex;
 import org.tony.sorting.*;
 
 import java.util.*;
@@ -13,51 +15,67 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        weightedGraph();
+        Graph<NumericVertex> graph = new WeightedGraph();
+        initGraphWithNumericVertexes(graph);
+        breadthFirstSearch(graph);
+        depthFirstSearch(graph);
     }
 
-    static void weightedGraph(){
-        WeightedGraph weightedGraph = new WeightedGraph();
-        final List<WeightedGraph.NumericVertex> verts = new ArrayList<>(6);
+    private static void initGraphWithWeightedNumericVertexes(WeightedGraph graph){
+        final List<NumericVertex> verts = new ArrayList<>(6);
         for (int i = 0; i < 6; i++)
-            verts.add(i, weightedGraph.new NumericVertex(i));
-        verts.get(0).addLink(verts.get(1), 5);
-        verts.get(0).addLink(verts.get(3), 3);
-        verts.get(1).addLink(verts.get(5), 1);
-        verts.get(2).addLink(verts.get(5), 4);
-        verts.get(3).addLink(verts.get(1), 4);
-        verts.get(3).addLink(verts.get(2), 22);
-        verts.get(4).addLink(verts.get(3), 2);
-        verts.get(4).addLink(verts.get(5), 6);
-        verts.get(5).addLink(verts.get(3), 3);
-        verts.get(5).addLink(verts.get(4), 9);
-        System.out.println(verts.get(0));
-        System.out.println(verts.get(0).getWeight(verts.get(1)));
-        System.out.println(verts.get(0).getNextVertexesWithWeights());
+            verts.add(i, new NumericVertex(i));
+        graph.setLink(verts.get(0), verts.get(1), 4);
+        graph.setLink(verts.get(0), verts.get(3), 2);
+        graph.setLink(verts.get(1), verts.get(5), 1);
+        graph.setLink(verts.get(2), verts.get(5), 7);
+        graph.setLink(verts.get(3), verts.get(1), 5);
+        graph.setLink(verts.get(3), verts.get(2), 3);
+        graph.setLink(verts.get(4), verts.get(3), 2);
+        graph.setLink(verts.get(4), verts.get(5), 5);
+        graph.setLink(verts.get(5), verts.get(3), 4);
+        graph.setLink(verts.get(5), verts.get(4), 1);
     }
 
-    static void depthFirstSearch() {
-        Graph graph = new Graph();
-        graph.initSample();
-        Graph.DepthFirstSearch depthFirstSearch = graph.new DepthFirstSearch();
-        for (Map.Entry<Graph.NumericVertex, Graph.NumericVertex> x :
+    static void depthFirstSearch(Graph<NumericVertex> graph) {
+        DepthFirstSearch depthFirstSearch = new DepthFirstSearch(graph);
+        for (Map.Entry<NumericVertex, NumericVertex> x :
                 depthFirstSearch.getPreviousVertexes().getAll())
             System.out.println(x + " ");
         System.out.println();
     }
 
-    static void breadthFirstSearch() {
-        Graph graph = new Graph();
-        graph.initSample();
-        Graph.NumericVertex startNode = graph.getAllNodes().iterator().next();
-        Graph.BreadthFirstSearch breadthFirstSearch = graph.new BreadthFirstSearch(startNode);
+    /**
+     * Пример графа из видео
+     * https://www.youtube.com/watch?v=I8VEJVlB8mw
+     */
+    private static void initGraphWithNumericVertexes(Graph<NumericVertex> g){
+        final List<NumericVertex> verts = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            verts.add(i, new NumericVertex(i + 1));
+        }
+        g.setLink(verts.get(0), verts.get(1));
+        g.setLink(verts.get(0), verts.get(3));
+        g.setLink(verts.get(1), verts.get(5));
+        g.setLink(verts.get(2), verts.get(5));
+        g.setLink(verts.get(3), verts.get(1));
+        g.setLink(verts.get(3), verts.get(2));
+        g.setLink(verts.get(4), verts.get(3));
+        g.setLink(verts.get(4), verts.get(5));
+        g.setLink(verts.get(5), verts.get(3));
+        g.setLink(verts.get(5), verts.get(4));
+    }
+
+    static void breadthFirstSearch(Graph<NumericVertex> graph) {
+        NumericVertex startNode = graph.getAllNodes().iterator().next();
+        BreadthFirstSearch breadthFirstSearch = new BreadthFirstSearch(graph, startNode);
         System.out.println("Staring node: " + breadthFirstSearch.getStartNode());
         System.out.println();
-        for (Map.Entry<Graph.NumericVertex, Integer> x :
+        for (Map.Entry<NumericVertex, Integer> x :
                 breadthFirstSearch.getPathLengthToVertexes().getAll())
             System.out.println(x + " ");
         System.out.println();
-        for (Map.Entry<Graph.NumericVertex, Graph.NumericVertex> x :
+        for (Map.Entry<NumericVertex, NumericVertex> x :
                 breadthFirstSearch.getPreviousVertexes().getAll())
             System.out.println(x + " ");
         System.out.println();
