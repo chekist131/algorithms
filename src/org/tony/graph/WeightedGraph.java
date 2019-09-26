@@ -6,13 +6,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class WeightedGraph extends Graph<NumericVertex> {
+public class WeightedGraph<VertexT extends NumericVertex> extends Graph<VertexT> {
 
-    private final Map<NumericVertex, Map<NumericVertex, Integer>> weights = new TreeMap<>();
+    private final Map<VertexT, Map<VertexT, Integer>> weights = new TreeMap<>();
 
-    public void setLink(NumericVertex from, NumericVertex to, int weight) {
+    public void setLink(VertexT from, VertexT to, int weight) {
         if (weights.get(from) == null) {
-            Map<NumericVertex, Integer> e = new TreeMap<>();
+            Map<VertexT, Integer> e = new TreeMap<>();
             e.put(to, weight);
             weights.put(from, e);
         } else {
@@ -21,17 +21,22 @@ public class WeightedGraph extends Graph<NumericVertex> {
     }
 
     @Override
-    public void setLink(NumericVertex from, NumericVertex to) {
+    public void setLink(VertexT from, VertexT to) {
         this.setLink(from, to, 1);
     }
 
     @Override
-    public Set<NumericVertex> getLinks(NumericVertex numericVertex) {
+    public Set<VertexT> getLinks(VertexT numericVertex) {
         return weights.get(numericVertex).keySet();
     }
 
     @Override
-    public Set<NumericVertex> getAllNodes() {
+    public Set<VertexT> getAllNodes() {
         return weights.keySet();
+    }
+
+    @Override
+    public int getLength(VertexT from, VertexT to) {
+        return weights.get(from).get(to);
     }
 }

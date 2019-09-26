@@ -8,32 +8,32 @@ import java.util.TreeMap;
 /**
  * Алгоритм поиска в глубину на графе
  */
-public class DepthFirstSearch {
+public class DepthFirstSearch<VertexT extends NumericVertex> {
 
-    private Graph<NumericVertex> graph;
-    private final PreviousVertexes previousVertexes;
+    private final Graph<VertexT> graph;
+    private final PreviousVertexes<VertexT> previousVertexes;
 
-    public DepthFirstSearch(Graph<NumericVertex> graph) {
+    public DepthFirstSearch(Graph<VertexT> graph) {
         this.graph = graph;
-        previousVertexes = new PreviousVertexes();
+        previousVertexes = new PreviousVertexes<>();
         init();
     }
 
     private void init() {
-        final TreeMap<NumericVertex, VertexColor> statusC = new TreeMap<>();
-        for (NumericVertex node : graph.getAllNodes()) {
+        final TreeMap<VertexT, VertexColor> statusC = new TreeMap<>();
+        for (VertexT node : graph.getAllNodes()) {
             statusC.put(node, VertexColor.White);
         }
-        for (NumericVertex node : graph.getAllNodes()) {
+        for (VertexT node : graph.getAllNodes()) {
             if (statusC.get(node) == VertexColor.White) {
                 initRecur(node, statusC);
             }
         }
     }
 
-    private void initRecur(NumericVertex node, TreeMap<NumericVertex, VertexColor> statusC) {
+    private void initRecur(VertexT node, TreeMap<VertexT, VertexColor> statusC) {
         statusC.put(node, VertexColor.Grey);
-        for (NumericVertex next : graph.getLinks(node)) {
+        for (VertexT next : graph.getLinks(node)) {
             if (statusC.get(next) == VertexColor.White){
                 previousVertexes.put(next, node);
                 initRecur(next, statusC);
@@ -42,7 +42,7 @@ public class DepthFirstSearch {
         statusC.put(node, VertexColor.Black);
     }
 
-    public PreviousVertexes getPreviousVertexes() {
+    public PreviousVertexes<VertexT> getPreviousVertexes() {
         return previousVertexes;
     }
 }

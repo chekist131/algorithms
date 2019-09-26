@@ -15,13 +15,33 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        Graph<NumericVertex> graph = new WeightedGraph();
-        initGraphWithNumericVertexes(graph);
-        breadthFirstSearch(graph);
-        depthFirstSearch(graph);
+        {
+            System.out.println();
+            System.out.println("Usual graph");
+            Graph<NumericVertex> graph = new Graph<>();
+            initGraphWithNumericVertexes(graph);
+            breadthFirstSearch(graph);
+            depthFirstSearch(graph);
+        }
+        {
+            System.out.println();
+            System.out.println("Usual graph");
+            Graph<NumericVertex> graph = new WeightedGraph<>();
+            initGraphWithNumericVertexes(graph);
+            breadthFirstSearch(graph);
+            depthFirstSearch(graph);
+        }
+        {
+            System.out.println();
+            System.out.println("Weighted graph");
+            WeightedGraph<NumericVertex> graph = new WeightedGraph<>();
+            initGraphWithWeightedNumericVertexes(graph);
+            breadthFirstSearch(graph);
+            depthFirstSearch(graph);
+        }
     }
 
-    private static void initGraphWithWeightedNumericVertexes(WeightedGraph graph){
+    private static void initGraphWithWeightedNumericVertexes(WeightedGraph<NumericVertex> graph){
         final List<NumericVertex> verts = new ArrayList<>(6);
         for (int i = 0; i < 6; i++)
             verts.add(i, new NumericVertex(i));
@@ -38,7 +58,7 @@ public class Main {
     }
 
     static void depthFirstSearch(Graph<NumericVertex> graph) {
-        DepthFirstSearch depthFirstSearch = new DepthFirstSearch(graph);
+        DepthFirstSearch<NumericVertex> depthFirstSearch = new DepthFirstSearch<>(graph);
         for (Map.Entry<NumericVertex, NumericVertex> x :
                 depthFirstSearch.getPreviousVertexes().getAll())
             System.out.println(x + " ");
@@ -68,7 +88,7 @@ public class Main {
 
     static void breadthFirstSearch(Graph<NumericVertex> graph) {
         NumericVertex startNode = graph.getAllNodes().iterator().next();
-        BreadthFirstSearch breadthFirstSearch = new BreadthFirstSearch(graph, startNode);
+        BreadthFirstSearch<NumericVertex> breadthFirstSearch = new BreadthFirstSearch<>(graph, startNode);
         System.out.println("Staring node: " + breadthFirstSearch.getStartNode());
         System.out.println();
         for (Map.Entry<NumericVertex, Integer> x :

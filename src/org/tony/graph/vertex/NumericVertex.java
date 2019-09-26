@@ -1,10 +1,5 @@
 package org.tony.graph.vertex;
 
-import org.tony.graph.Graph;
-
-import java.util.Set;
-import java.util.TreeSet;
-
 public class NumericVertex implements Comparable<NumericVertex> {
     protected final int number;
 

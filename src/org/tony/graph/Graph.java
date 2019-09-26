@@ -21,4 +21,8 @@ public class Graph<VertexT extends NumericVertex> {
         data.computeIfAbsent(from, k -> new TreeSet<>());
         data.get(from).add(to);
     }
+
+    public int getLength(VertexT from, VertexT to) {
+        return 1;
+    }
 }
